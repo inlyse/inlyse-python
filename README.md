@@ -29,7 +29,7 @@ To use inlyse-python in a project:
 ...     client.ping()
 ~~~
 
-For more details please checkout our [documentation](https://documentation.inlyse.com/python).
+For more details please checkout our [documentation](https://documentation.inlyse.cloud/python).
 
 ## Console Script Usage
 
