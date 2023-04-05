@@ -670,7 +670,7 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient(<your license key>)
-            >>> response = client.upload_url(
+            >>> response = client.upload_owa(
             ... "https://attachments.office.net/owa/Max.Mustermann%40test.com/...",
             ... "iMWFWf1EZh8WM27tqXFlIa1QoNDfmjaZT0Xz7IyaDASBCUamUKcMKUSTVYJTOUm5...")
             >>> response
@@ -796,10 +796,12 @@ class WebClient:
               - If the quota is exceed, it returns the HTTP status 429.
 
         It's possible to filter the analyses by:
-        * finished
-        * unfinished
-        * error
-        * all [DEFAULT]
+
+            * finished
+            * unfinished
+            * error
+            * all [DEFAULT]
+
         If no filter is applied, you will get all analyses.
 
         **Example**:
