@@ -1,0 +1,82 @@
+name: Pre-Checks and Tests for Pull Requests
+
+on:
+  pull_request:
+    branches:
+    - master
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  checks:
+    name: Pre-Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install poetry
+      run: pipx install poetry
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+        cache: 'poetry'
+
+    - name: Install dependencies
+      run: |
+        poetry install
+
+    - name: Run pre-commit hooks
+      run: |
+        poetry run pre-commit install
+        poetry run pre-commit run --all-files
+
+    - name: Semantic Release PR Title Check
+      uses: osl-incubator/semantic-release-pr-title-check@v1.4.1
+      with:
+        convention-name: conventionalcommits
+
+  pytest:
+    needs: [checks]
+    if: github.event.pull_request.draft == false
+    name: Runs pytest
+
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+        os: ['ubuntu', 'windows', 'macos']
+
+    runs-on: ${{ matrix.os }}-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    concurrency:
+      group: ci-tests-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install poetry
+      run: pipx install poetry
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'poetry'
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Execute all tests
+      run: poetry run pytest
