@@ -15,7 +15,7 @@ dynamic = [
 
 [tool.poetry]
 name = "inlyse"
-version = "1.0.0"  # semantic-release
+version = "1.0.1"  # semantic-release
 readme = "README.md"
 classifiers = [
     "Development Status :: 4 - Beta",

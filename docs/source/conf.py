@@ -35,7 +35,7 @@ master_doc = "index"
 project = "inlyse-python"
 copyright = "2023, inlyse GmbH"
 author = "inlyse GmbH"
-version = release = "1.0.0"  # semantic-release
+version = release = "1.0.1"  # semantic-release
 
 autosummary_generate = True
 
