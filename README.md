@@ -1,4 +1,4 @@
-# INLYSE Python Library 1.0.0 <!-- semantic release -->
+# INLYSE Python Library 1.0.0  <!-- semantic release -->
 
 [![pypi](https://img.shields.io/pypi/v/inlyse-python.svg)](https://pypi.org/project/inlyse-python/)
 [![python](https://img.shields.io/pypi/pyversions/inlyse-python.svg)](https://pypi.org/project/inlyse-python/)

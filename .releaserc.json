@@ -9,8 +9,8 @@
         "replacements": [
           {
             "files": ["src/inlyse/__init__.py"],
-            "from": "__version__ = '.*'",
-            "to": "__version__ = '${nextRelease.version}'",
+            "from": "__version__ = \".*\"  # semantic-release",
+            "to": "__version__ = \"${nextRelease.version}\"  # semantic-release",
             "results": [
               {
                 "file": "src/inlyse/__init__.py",
@@ -24,7 +24,7 @@
           {
             "files": ["README.md"],
             "from": "# INLYSE Python Library .*  <!-- semantic release -->",
-            "to": "# inlyse-python ${nextRelease.version} <!-- semantic release -->",
+            "to": "# INLYSE Python Library ${nextRelease.version}  <!-- semantic release -->",
             "results": [
               {
                 "file": "README.md",
@@ -37,8 +37,8 @@
           },
           {
             "files": ["docs/source/conf.py"],
-            "from": "release = '.*'   # semantic-release",
-            "to": "release = ${nextRelease.version}  # semantic-release",
+            "from": "version = release = \".*\"  # semantic-release",
+            "to": "version = release = \"${nextRelease.version}\"  # semantic-release",
             "results": [
               {
                 "file": "docs/source/conf.py",
