@@ -1,5 +1,5 @@
 default_stages:
-  - commit
+  - pre-commit
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,7 +22,7 @@ repos:
       name: black
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
         - file
@@ -36,7 +36,7 @@ repos:
       name: isort
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
       types_or: []
@@ -49,7 +49,7 @@ repos:
       name: ruff
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
       types_or: []
@@ -62,7 +62,7 @@ repos:
       name: mypy
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
       types_or: []
