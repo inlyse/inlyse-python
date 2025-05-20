@@ -1,5 +1,4 @@
-"""The module bundles all available clients for the INLYSE API.
-"""
+"""The module bundles all available clients for the INLYSE API."""
 
 # Standard Library
 import functools
@@ -54,7 +53,7 @@ class InlyseResponse:
     :type content_type: tuple
     :param content: The content of the response.
     :type content: Any
-    """
+    """  # noqa: E501
 
     endpoint: str
     status: int
@@ -138,7 +137,7 @@ class WebClient:
         {'AnalysedFiles': 293, 'Traffic': 266161837}
 
     These methods will return a :class:`requests.Response` object.
-    """
+    """  # noqa: E501
 
     def __init__(
         self,
@@ -203,7 +202,7 @@ class WebClient:
 
         :return: The sleeping time.
         :rtype: float
-        """
+        """  # noqa: E501
         if attempt == 0:
             logger.debug("Waiting the average response time: %s", avg_time)
             time.sleep(avg_time)
@@ -250,7 +249,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.get(path)
 
     @endpoint("/ping")
@@ -290,7 +289,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.get(path)
 
     @endpoint("/api/stats")
@@ -342,7 +341,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.get(path)
 
     def download_link(self, analysis_id: str) -> str:
@@ -367,7 +366,7 @@ class WebClient:
 
         :return: Returns a download link for the file of the specified analysis.
         :rtype: str
-        """
+        """  # noqa: E501
         return urljoin(self.url, f"/api/analysis/{analysis_id}/download")
 
     @endpoint("/api/analysis/{id}/download")
@@ -562,7 +561,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.post(path, files={"file": (filename, content)})
 
     @endpoint("/api/files/url")
@@ -627,7 +626,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.post(path, json={"url": url})
 
     @endpoint("/api/files/owa")
@@ -693,7 +692,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.post(path, json={"url": url, "token": token})
 
     @endpoint("/api/files/disarm")
@@ -753,7 +752,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         return self.api.post(path, files={"file": (filename, content)})
 
     def disarm(self, filename: str, content: bytes):
@@ -834,7 +833,7 @@ class WebClient:
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
-        """
+        """  # noqa: E501
         if filter_ not in ["all", "finished", "unfinished", "error"]:
             logger.warning("Unknown filter %s.", filter_)
             filter_ = "all"
@@ -980,7 +979,9 @@ class WebClient:
                 raise InlyseApiError(response.content)
             retries += 1
         raise MaxRetriesExceeded(
-            "Max retries exceeded. Please increase the number of retries or the estimated waiting time."
+            "Max retries exceeded. "
+            + "Please increase the number of retries "
+            + "or the estimated waiting time."
         )
 
     def _upload(self, upload_type, max_retries, **kwargs):

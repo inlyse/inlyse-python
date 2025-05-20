@@ -1,5 +1,4 @@
-"""Module for all exceptions
-"""
+"""Module for all exceptions"""
 
 
 class InlyseApiError(Exception):

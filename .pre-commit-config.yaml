@@ -41,18 +41,32 @@ repos:
         - python
       types_or: []
 
-    - entry: ruff
+    - id: ruff
       exclude: ^$
       files: ""
-      id: ruff
-      language: python
       name: ruff
+      language: python
+      entry: ruff check --force-exclude
       pass_filenames: true
+      require_serial: true
+      args: []
       stages:
         - pre-commit
-      types:
-        - python
-      types_or: []
+      types_or: [python, pyi, jupyter]
+
+    - id: ruff-format
+      exclude: ^$
+      files: ""
+      name: ruff-format
+      description: "Run 'ruff format' for extremely fast Python formatting"
+      language: python
+      entry: ruff format --force-exclude
+      pass_filenames: true
+      require_serial: true
+      args: []
+      stages:
+        - pre-commit
+      types_or: [python, pyi, jupyter]
 
     - entry: mypy
       exclude: ^$
