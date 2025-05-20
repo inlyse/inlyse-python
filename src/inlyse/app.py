@@ -75,7 +75,7 @@ def _scan(
         click.confirm(
             (
                 "Critical Rate-Limit: "
-                f"You have just {remaining} requests left."
+                f"You have just {remaining} requests left. "
                 "Do you want to continue anyway ..."
             ),
             abort=True,
@@ -180,7 +180,8 @@ def main(ctx, license_key, url, threads, timeout, verbose):
                 )
                 continue_in = divmod(continue_in.total_seconds(), 60)[0]
                 click.echo(
-                    f"Rate-Limit Exceeded: Please try again in {continue_in} minutes.",
+                    "Rate-Limit Exceeded: Please try again in"
+                    + f" {continue_in} minutes.",
                     err=True,
                 )
                 sys.exit(1)

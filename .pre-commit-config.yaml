@@ -1,5 +1,5 @@
 default_stages:
-  - commit
+  - pre-commit
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,7 +22,7 @@ repos:
       name: black
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
         - file
@@ -36,23 +36,37 @@ repos:
       name: isort
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
       types_or: []
 
-    - entry: ruff
+    - id: ruff
       exclude: ^$
       files: ""
-      id: ruff
-      language: python
       name: ruff
+      language: python
+      entry: ruff check --force-exclude
       pass_filenames: true
+      require_serial: true
+      args: []
       stages:
-        - commit
-      types:
-        - python
-      types_or: []
+        - pre-commit
+      types_or: [python, pyi, jupyter]
+
+    - id: ruff-format
+      exclude: ^$
+      files: ""
+      name: ruff-format
+      description: "Run 'ruff format' for extremely fast Python formatting"
+      language: python
+      entry: ruff format --force-exclude
+      pass_filenames: true
+      require_serial: true
+      args: []
+      stages:
+        - pre-commit
+      types_or: [python, pyi, jupyter]
 
     - entry: mypy
       exclude: ^$
@@ -62,7 +76,7 @@ repos:
       name: mypy
       pass_filenames: true
       stages:
-        - commit
+        - pre-commit
       types:
         - python
       types_or: []

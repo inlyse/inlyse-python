@@ -129,8 +129,8 @@ def test_check(client, api, check_response, rate_limit) -> None:
         "ID": f"{analysis_id}",
         "MD5": "f5d7470145ba5a8afc9b0ac502231d63",
         "SHA1": "4a1634fdb9cca72ec0a7f094055e4b08a40da66c",
-        "SHA256": "11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2",
-        "SHA512": "98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e",  # noqa
+        "SHA256": "11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2",  # noqa: E501
+        "SHA512": "98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e",  # noqa: E501
         "Filename": "dairycow_vacalechera.pdf",
         "Size": 3042676,
         "FileType": "application/pdf",
