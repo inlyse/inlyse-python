@@ -1,6 +1,13 @@
 Release Notes
 ---
 
+## [1.0.2](https://github.com/inlyse/inlyse-python/compare/1.0.1...1.0.2) (2025-05-26)
+
+
+### Bug Fixes
+
+* **deps:** Bump click from 8.2.0 to 8.2.1 ([#10](https://github.com/inlyse/inlyse-python/issues/10)) ([ca3b70c](https://github.com/inlyse/inlyse-python/commit/ca3b70c9ecc75eea77fc708e76f6d3c6c4087249))
+
 ## [1.0.1](https://github.com/inlyse/inlyse-python/compare/1.0.0...1.0.1) (2025-05-20)
 
 
