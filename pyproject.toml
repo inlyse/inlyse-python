@@ -58,7 +58,7 @@ pre-commit = "^4.2.0"
 black = "^25.1.0"
 isort = "^6.0.1"
 mypy = "^1.16.0"
-ruff = "^0.11.11"
+ruff = "^0.11.12"
 packaging = "^25.0"
 pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
 
