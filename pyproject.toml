@@ -44,7 +44,7 @@ changelog = "https://github.com/inlyse/inlyse-python/blob/master/CHANGELOG.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.32.4"
-types-requests = "^2.32.0.20250602"
+types-requests = "^2.32.4.20250611"
 click = "^8.2.1"
 tqdm = "^4.67.1"
 loguru = "^0.7.3"
