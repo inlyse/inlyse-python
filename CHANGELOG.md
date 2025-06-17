@@ -1,6 +1,13 @@
 Release Notes
 ---
 
+## [1.0.5](https://github.com/inlyse/inlyse-python/compare/1.0.4...1.0.5) (2025-06-17)
+
+
+### Bug Fixes
+
+* **deps:** bump types-requests from 2.32.0.20250602 to 2.32.4.20250611 ([#18](https://github.com/inlyse/inlyse-python/issues/18)) ([044cf12](https://github.com/inlyse/inlyse-python/commit/044cf12bba536cb5ba9b55e2793a615202d9ddaa))
+
 ## [1.0.4](https://github.com/inlyse/inlyse-python/compare/1.0.3...1.0.4) (2025-06-10)
 
 
