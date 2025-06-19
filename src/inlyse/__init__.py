@@ -1,4 +1,4 @@
-__version__ = "1.0.5"  # semantic-release
+__version__ = "1.0.6"  # semantic-release
 
 # Set default logging handler to avoid "No handler found" warnings.
 import logging

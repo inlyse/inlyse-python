@@ -1,6 +1,13 @@
 Release Notes
 ---
 
+## [1.0.6](https://github.com/inlyse/inlyse-python/compare/1.0.5...1.0.6) (2025-06-19)
+
+
+### Bug Fixes
+
+* **deps:** bump urllib3 from 2.4.0 to 2.5.0 ([#21](https://github.com/inlyse/inlyse-python/issues/21)) ([2e8c385](https://github.com/inlyse/inlyse-python/commit/2e8c38521e06ff848913580037745bea2a21c0ad))
+
 ## [1.0.5](https://github.com/inlyse/inlyse-python/compare/1.0.4...1.0.5) (2025-06-17)
 
 
