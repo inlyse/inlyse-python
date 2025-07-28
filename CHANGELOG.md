@@ -1,6 +1,13 @@
 Release Notes
 ---
 
+## [1.0.7](https://github.com/inlyse/inlyse-python/compare/1.0.6...1.0.7) (2025-07-28)
+
+
+### Bug Fixes
+
+* **ci:** Fixes semantic-release dry-run ([#28](https://github.com/inlyse/inlyse-python/issues/28)) ([1e899e0](https://github.com/inlyse/inlyse-python/commit/1e899e04ace5185e76973a2492bde4b77921ab84))
+
 ## [1.0.6](https://github.com/inlyse/inlyse-python/compare/1.0.5...1.0.6) (2025-06-19)
 
 
