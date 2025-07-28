@@ -2,7 +2,7 @@ name: Semantic Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
     types:
       - opened
@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
- semantic_release: 'npx --yes
+  semantic_release: 'npx --yes
 	-p semantic-release
 	-p @semantic-release/commit-analyzer
 	-p @semantic-release/release-notes-generator
@@ -34,20 +34,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-           node-version: "lts/*"
+          node-version: "lts/*"
 
       - name: Install poetry
         run: pipx install poetry
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.13
           cache: 'poetry'
@@ -61,7 +61,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-            $semantic_release --dry
+            $semantic_release --dry-run
 
       - name: Release
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -73,7 +73,7 @@ jobs:
           GIT_COMMITTER_EMAIL: info@inlyse.com
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
-            poetry config pypi-token.pypi ${PYPI_TOKEN}
+            poetry config pypi-token.pypi "${PYPI_TOKEN}"
             $semantic_release --ci
 
       - name: Build new documentation
@@ -83,7 +83,7 @@ jobs:
 
       - name: Publish new documentation
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: inlyse/inlyse-documentation
