@@ -62,6 +62,25 @@ class InlyseResponse:
     content: Any
 
 
+def get_reset_time(reset: str) -> datetime:
+    """Parse reset time, auto-detecting format."""
+
+    # Unix timestamp (digits only)
+    if reset.isdigit():
+        try:
+            return datetime.fromtimestamp(int(reset), tz=timezone.utc)
+        except (ValueError, OSError) as err:
+            raise ValueError(f"Invalid Unix timestamp: {reset}") from err
+
+    # Legacy date format
+    try:
+        return datetime.strptime(reset, "%d-%m-%Y %H:%M:%S").replace(
+            tzinfo=timezone.utc
+        )
+    except ValueError as err:
+        raise ValueError(f"Invalid date format: {reset}") from err
+
+
 def endpoint(path=None):
     def endpoint_decorator(func):
         @functools.wraps(func)
@@ -77,10 +96,9 @@ def endpoint(path=None):
                     "remaining": int(
                         response.headers["x-ratelimit-remaining"]
                     ),
-                    "reset": datetime.strptime(
-                        response.headers["x-ratelimit-reset"],
-                        "%d-%m-%Y %H:%M:%S",
-                    ).replace(tzinfo=timezone.utc),
+                    "reset": get_reset_time(
+                        response.headers["x-ratelimit-reset"]
+                    ),
                 }
             content_type = _parse_content_type_header(
                 response.headers["content-type"]
