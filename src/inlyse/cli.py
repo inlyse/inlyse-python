@@ -235,7 +235,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.version()
             >>> response
             InlyseResponse(
@@ -275,7 +275,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.ping()
             >>> response
             InlyseResponse(
@@ -322,7 +322,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.stats()
             >>> response
             InlyseResponse(
@@ -358,7 +358,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> link = client.download_link("0ef3822b-481d-4368-88ea-6a2417bb2dac")
             >>> link
             'https://malware.ai/api/analysis/0ef3822b-481d-4368-88ea-6a2417bb2dac/download'
@@ -409,7 +409,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> download = client.download("0ef3822b-481d-4368-88ea-6a2417bb2dac")
             >>> download
             InlyseResponse(
@@ -474,7 +474,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.disarm_analysis("0ef3822b-481d-4368-88ea-6a2417bb2dac")
             >>> response
             InlyseResponse(
@@ -537,7 +537,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> with open("/tmp/javascript.pdf", "rb") as fp:
             ...     response = client.upload_file(os.path.basename(fp.name), fp.read())
             >>> response
@@ -604,7 +604,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.upload_url("https://arxiv.org/pdf/2004.14471.pdf")
             >>> response
             InlyseResponse(
@@ -668,7 +668,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.upload_owa(
             ... "https://attachments.office.net/owa/Max.Mustermann%40test.com/...",
             ... "iMWFWf1EZh8WM27tqXFlIa1QoNDfmjaZT0Xz7IyaDASBCUamUKcMKUSTVYJTOUm5...")
@@ -731,7 +731,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> with open("/tmp/javascript.pdf", "rb") as fp:
             ...     response = client.disarm_file(os.path.basename(fp.name), fp.read())
             >>> response
@@ -808,7 +808,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.list_analyses()
             >>> response
             InlyseResponse(
@@ -876,7 +876,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.check("1a13ba09-8487-4621-b2a3-b0ff460f7a9e")
             >>> response
             InlyseResponse(
@@ -934,7 +934,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.get_analysis("1a13ba09-8487-4621-b2a3-b0ff460f7a9e", 5.83675, 2)
             >>> response
             InlyseResponse(
@@ -1023,7 +1023,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> with open("/tmp/javascript.pdf", "rb") as fp:
             ...     response = client.scan_file(os.path.basename(fp.name), fp.read())
             >>> response
@@ -1078,7 +1078,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.scan_url("https://arxiv.org/pdf/2004.14471.pdf")
             >>> response
             InlyseResponse(
@@ -1131,7 +1131,7 @@ class WebClient:
         .. sourcecode:: pycon
 
             >>> from inlyse import WebClient
-            >>> client = WebClient(<your license key>)
+            >>> client = WebClient("<your license key>")
             >>> response = client.scan_owa(
             ...     "https://attachments.office.net/owa/Max.Mustermann%40test.com/...",
             ...     "iMWFWf1EZh8WM27tqXFlIa1QoNDfmjaZT0Xz7IyaDASBCUamUKcMKUSTVYJTOUm5..."
