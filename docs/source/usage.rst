@@ -11,4 +11,6 @@ To use inlyse-python in a project.
 
     >>> from inlyse import WebClient
     >>> with WebClient("<your license key>") as client:
-    ...     client.ping()
+    ...     response = client.ping()
+    ...     print(response.content)
+    Pong

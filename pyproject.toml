@@ -63,9 +63,10 @@ packaging = "^25.0"
 pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.4.2"
+pytest = "^9.0.1"
 pytest-cov = "^7.0.0"
 responses = "^0.25.8"
+pytest-doctestplus = "^1.5.0"
 
 [tool.poetry.group.docs]
 optional = true
@@ -142,24 +143,23 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 max-complexity = 10
 
 [tool.pytest]
-norecursedirs = """
-    .git
-    .env
-    dist
-    build
-"""
-addopts = """
-    -rxEfsw
-    --strict
-    --doctest-modules
-    --doctest-glob=*.rst
-    --tb=short
-    --ignore=setup.py
-    --ignore=.eggs
-    --no-cov-on-fail
-    --cov=inlyse
-    --cov-report=term-missing
-"""
+norecursedirs = [
+    ".git",
+    ".env",
+    "dist",
+    "build",
+]
+
+addopts = [
+    "-rxEfsw",
+    "--strict",
+    "--tb=short",
+    "--ignore=setup.py",
+    "--ignore=.eggs",
+    "--no-cov-on-fail",
+    "--cov=inlyse",
+    "--cov-report=term-missing",
+]
 
 [tool.isort]
 ensure_newline_before_comments = true
