@@ -63,7 +63,7 @@ packaging = "^25.0"
 pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
 
 [tool.poetry.group.test.dependencies]
-pytest = "^8.4.2"
+pytest = "^9.0.1"
 pytest-cov = "^7.0.0"
 responses = "^0.25.8"
 
