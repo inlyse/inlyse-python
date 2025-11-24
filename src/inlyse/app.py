@@ -198,7 +198,7 @@ def main(ctx, license_key, url, threads, timeout, verbose):
             )
             sys.exit(1)
         except Exception as error:
-            logger.debug(error)
+            logger.opt(exception=True).debug(error)
             click.echo(
                 "Exception not handled: Please report an issue.", err=True
             )
