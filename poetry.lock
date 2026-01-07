@@ -1784,14 +1784,14 @@ testing = ["bs4", "coverage", "pygments", "pytest (>=7.1,<8)", "pytest-cov", "py
 
 [[package]]
 name = "sphinx-toolbox"
-version = "4.1.0"
+version = "4.1.1"
 description = "Box of handy tools for Sphinx 🧰 📔"
 optional = false
 python-versions = ">=3.7"
 groups = ["docs"]
 files = [
-    {file = "sphinx_toolbox-4.1.0-py3-none-any.whl", hash = "sha256:9024a7482b92ecf4572f83940c87ae26c2eca3ca49ff3df5f59806e88da958f6"},
-    {file = "sphinx_toolbox-4.1.0.tar.gz", hash = "sha256:5da890f4bb0cacea4f1cf6cef182c5be480340d0ead43c905f51f7e5aacfc19c"},
+    {file = "sphinx_toolbox-4.1.1-py3-none-any.whl", hash = "sha256:1ee2616091453430ffe41e8371e0ddd22a5c1f504ba2dfb306f50870f3f7672a"},
+    {file = "sphinx_toolbox-4.1.1.tar.gz", hash = "sha256:1bb1750bf9e1f72a54161b0867caf3b6bf2ee216ecb9f8c519f0a9348824954a"},
 ]
 
 [package.dependencies]
@@ -1805,7 +1805,7 @@ domdf-python-tools = ">=2.9.0"
 filelock = ">=3.8.0"
 html5lib = ">=1.1"
 roman = ">4.0"
-"ruamel.yaml" = ">=0.16.12"
+"ruamel.yaml" = ">=0.16.12,<=0.18.16"
 sphinx = ">=3.2.0"
 sphinx-autodoc-typehints = ">=1.11.1"
 sphinx-jinja2-compat = ">=0.1.0"
@@ -2269,4 +2269,4 @@ docs = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "4459fff77c5cf0d9d4e2f85abf51d2dbf1e15d7e1b8614271bbe4f0d477e9809"
+content-hash = "7d39deb26de4cc63e0f842f954a25f76ea0f4e64773c7585779c1bd10176794a"
