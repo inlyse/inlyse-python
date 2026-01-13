@@ -1304,19 +1304,19 @@ testing = ["process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
 name = "pytest-doctestplus"
-version = "1.6.0"
+version = "1.7.0"
 description = "Pytest plugin with advanced doctest features."
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["test"]
 files = [
-    {file = "pytest_doctestplus-1.6.0-py3-none-any.whl", hash = "sha256:7ea003abfd62a787fee4cae674b0efc77c2fb73518ae60da662dc3b3ec2a47ed"},
-    {file = "pytest_doctestplus-1.6.0.tar.gz", hash = "sha256:f893d68370d19b418d58da0047d36a4feedac7ed28bc236858f484e994f1ac66"},
+    {file = "pytest_doctestplus-1.7.0-py3-none-any.whl", hash = "sha256:5327ef66c13f192022121acdc028d0b9448c16103f17371556bb747eae7ff2ea"},
+    {file = "pytest_doctestplus-1.7.0.tar.gz", hash = "sha256:eb439436cd59e64d4e8076b5f8615063c23abb6a31e7bd9a287623b755c73841"},
 ]
 
 [package.dependencies]
 packaging = ">=17.0"
-pytest = ">=4.6"
+pytest = ">=7.0"
 
 [package.extras]
 test = ["numpy", "pytest-remotedata (>=0.3.2)", "setuptools (>=30.3.0)", "sphinx"]
@@ -2269,4 +2269,4 @@ docs = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "9e813f00be871c0c20209b2640c1865c3bcb94e05499b68f00fa85ef0b6e8ba5"
+content-hash = "cbec72760570c3cb5c60683e57e4934b6168d86c18dbdc1de092c75d8bffc81a"
