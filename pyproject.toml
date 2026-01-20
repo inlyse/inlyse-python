@@ -77,7 +77,7 @@ sphinx-rtd-theme = "^3.1.0"
 sphinxcontrib-napoleon = "^0.7"
 myst-parser = "^4.0.1"
 sphinx-click = "^6.2.0"
-sphinx-toolbox = "^4.1.1"
+sphinx-toolbox = "^4.1.2"
 standard-imghdr = "^3.13.0"
 domdf-python-tools = "^3.10.0"
 
