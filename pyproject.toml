@@ -59,7 +59,7 @@ black = "^26.1.0"
 isort = "^7.0.0"
 mypy = "^1.19.1"
 ruff = "^0.14.13"
-packaging = "^25.0"
+packaging = "^26.0"
 pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
 
 [tool.poetry.group.test.dependencies]
