@@ -49,7 +49,7 @@ click = "^8.3.1"
 tqdm = "^4.67.1"
 loguru = "^0.7.3"
 click-params = "^0.5.0"
-types-tqdm = "^4.67.0.20250809"
+types-tqdm = "^4.67.2.20260202"
 requests-toolbelt = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
