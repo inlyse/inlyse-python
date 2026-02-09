@@ -66,7 +66,7 @@ pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
 pytest = "^9.0.2"
 pytest-cov = "^7.0.0"
 responses = "^0.25.8"
-pytest-doctestplus = "^1.7.0"
+pytest-doctestplus = "^1.7.1"
 
 [tool.poetry.group.docs]
 optional = true
