@@ -16,13 +16,13 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Install poetry
       run: pipx install poetry
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: 3.13
         cache: 'poetry'
@@ -37,7 +37,7 @@ jobs:
         poetry run pre-commit run --all-files
 
     - name: Semantic Release PR Title Check
-      uses: osl-incubator/semantic-release-pr-title-check@v1.4.1
+      uses: osl-incubator/semantic-release-pr-title-check@v1.4.3
       with:
         convention-name: conventionalcommits
 
@@ -49,7 +49,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
         os: ['ubuntu', 'windows', 'macos']
 
     runs-on: ${{ matrix.os }}-latest
@@ -64,13 +64,13 @@ jobs:
       cancel-in-progress: true
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
 
     - name: Install poetry
       run: pipx install poetry
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
         cache: 'poetry'
