@@ -73,6 +73,7 @@ repos:
       files: ""
       id: mypy
       language: python
+      require_serial: true
       name: mypy
       pass_filenames: true
       stages:
