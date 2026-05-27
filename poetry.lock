@@ -1872,35 +1872,35 @@ dev = ["bump2version", "transifex-client", "twine", "wheel"]
 
 [[package]]
 name = "sphinx-tabs"
-version = "3.4.5"
+version = "3.5.0"
 description = "Tabbed views for Sphinx"
 optional = false
-python-versions = "~=3.7"
+python-versions = ">=3.10"
 groups = ["docs"]
 files = [
-    {file = "sphinx-tabs-3.4.5.tar.gz", hash = "sha256:ba9d0c1e3e37aaadd4b5678449eb08176770e0fc227e769b6ce747df3ceea531"},
-    {file = "sphinx_tabs-3.4.5-py3-none-any.whl", hash = "sha256:92cc9473e2ecf1828ca3f6617d0efc0aa8acb06b08c56ba29d1413f2f0f6cf09"},
+    {file = "sphinx_tabs-3.5.0-py3-none-any.whl", hash = "sha256:154be49de4d5c8249ea08c5d9bf88ca8f9c31e00a178305a93cbc33e000339e5"},
+    {file = "sphinx_tabs-3.5.0.tar.gz", hash = "sha256:91dba1187e4c35fd37380a56ac228bbd54c6c649b2351829f3bf033718277537"},
 ]
 
 [package.dependencies]
 docutils = "*"
 pygments = "*"
-sphinx = "*"
+sphinx = ">=7"
 
 [package.extras]
 code-style = ["pre-commit (==2.13.0)"]
-testing = ["bs4", "coverage", "pygments", "pytest (>=7.1,<8)", "pytest-cov", "pytest-regressions", "rinohtype"]
+testing = ["bs4", "coverage", "pygments", "pytest (>=7.1)", "pytest-cov", "pytest-regressions", "rinohtype"]
 
 [[package]]
 name = "sphinx-toolbox"
-version = "4.1.2"
+version = "4.2.0"
 description = "Box of handy tools for Sphinx 🧰 📔"
 optional = false
 python-versions = ">=3.7"
 groups = ["docs"]
 files = [
-    {file = "sphinx_toolbox-4.1.2-py3-none-any.whl", hash = "sha256:0438f8342ba1c6c0d6e47207f4eac167adba61742e8c2b1dc9624ff955b7bc89"},
-    {file = "sphinx_toolbox-4.1.2.tar.gz", hash = "sha256:c30a4f86c4c29e97adb0eb9337d35f5093cb96a44f49caffcf7d5bc58a88b781"},
+    {file = "sphinx_toolbox-4.2.0-py3-none-any.whl", hash = "sha256:09f7bef48ee8936ecd890a298b3e1908fda11fe9e6a21fc623495ac34e42c962"},
+    {file = "sphinx_toolbox-4.2.0.tar.gz", hash = "sha256:f4dac92fc70e09e9af15d6b8ff003bde1f2aa3573118910f81cf486ced68d4ea"},
 ]
 
 [package.dependencies]
@@ -1914,12 +1914,12 @@ domdf-python-tools = ">=2.9.0"
 filelock = ">=3.8.0"
 html5lib = ">=1.1"
 roman = ">4.0"
-"ruamel.yaml" = ">=0.16.12,<=0.18.16"
+"ruamel.yaml" = ">=0.16.12"
 sphinx = ">=3.2.0"
-sphinx-autodoc-typehints = ">=1.11.1"
+sphinx-autodoc-typehints = ">=1.11.1,<3.6.0"
 sphinx-jinja2-compat = ">=0.1.0"
 sphinx-prompt = ">=1.1.0"
-sphinx-tabs = ">=1.2.1,<3.4.7"
+sphinx-tabs = ">=3.4.7,<3.6.0"
 tabulate = ">=0.8.7"
 typing-extensions = ">=3.7.4.3,<3.10.0.1 || >3.10.0.1"
 
@@ -2379,4 +2379,4 @@ docs = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "5ac91c4cc1f4bd226d6270951a1a19e31127657c0a80d1f45b91e0d7e8a4ab47"
+content-hash = "2107cbbcb4c90d7d440a4fd99f6ce7b062b4f5a477c8e5beaaa679570a9f485a"
