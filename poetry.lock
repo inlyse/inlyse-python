@@ -1901,14 +1901,14 @@ testing = ["bs4", "coverage", "pygments", "pytest (>=7.1)", "pytest-cov", "pytes
 
 [[package]]
 name = "sphinx-toolbox"
-version = "4.2.0"
+version = "4.3.0"
 description = "Box of handy tools for Sphinx 🧰 📔"
 optional = false
 python-versions = ">=3.7"
 groups = ["docs"]
 files = [
-    {file = "sphinx_toolbox-4.2.0-py3-none-any.whl", hash = "sha256:09f7bef48ee8936ecd890a298b3e1908fda11fe9e6a21fc623495ac34e42c962"},
-    {file = "sphinx_toolbox-4.2.0.tar.gz", hash = "sha256:f4dac92fc70e09e9af15d6b8ff003bde1f2aa3573118910f81cf486ced68d4ea"},
+    {file = "sphinx_toolbox-4.3.0-py3-none-any.whl", hash = "sha256:edab650523d61d410f13e3f288a8067227bb6682701cf79896f08325a375e1e7"},
+    {file = "sphinx_toolbox-4.3.0.tar.gz", hash = "sha256:07ec26176744ee3abe3c1eb4407419e81468f4536f332dcafc4e3240b0d6fae2"},
 ]
 
 [package.dependencies]
@@ -2387,4 +2387,4 @@ docs = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "c0b0f5da3343ec2620e7dfb88d0cd173f489e41ea702ae5a05d26d3a3765a5df"
+content-hash = "cfcbc71d7ec6178c912e8d524e970710d67dd8ce9fee2ad1fabbe047e426a1ca"
