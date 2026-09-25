@@ -11,7 +11,7 @@ from typing import Any, Union
 
 # Third Party Libraries
 from requests.adapters import HTTPAdapter, Retry
-from requests.compat import urljoin
+from requests.compat import urljoin, urlsplit
 from requests.utils import _parse_content_type_header  # type: ignore
 from requests_toolbelt import sessions
 
@@ -61,6 +61,16 @@ class InlyseResponse:
     content_type: tuple
     content: Any
 
+    def __repr__(self) -> str:
+        return (
+            "InlyseResponse(\n"
+            f"    endpoint={self.endpoint!r},\n"
+            f"    status={self.status},\n"
+            f"    rate_limit={self.rate_limit},\n"
+            f"    content_type={self.content_type},\n"
+            f"    content={self.content!r}\n)"
+        )
+
 
 def get_reset_time(reset: str) -> datetime:
     """Parse reset time, auto-detecting format."""
@@ -85,7 +95,6 @@ def endpoint(path=None):
     def endpoint_decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            self = args[0]
             if path:
                 kwargs["path"] = path
             response = func(*args, **kwargs)
@@ -108,7 +117,7 @@ def endpoint(path=None):
             else:
                 content = response.content
             return InlyseResponse(
-                urljoin(self.url, path),
+                urlsplit(response.url).path,
                 response.status_code,
                 quota,
                 content_type,
@@ -139,7 +148,9 @@ class WebClient:
 
         >>> from inlyse import WebClient
         >>> with WebClient("<your license key>") as client:
-        ...    client.ping()
+        ...    response = client.ping()
+        ...    print(response.content)
+        Pong
 
     It is also possible to use the raw API GET or POST requests like this:
 
@@ -147,12 +158,11 @@ class WebClient:
 
         >>> from inlyse import WebClient
         >>> with WebClient("<your license key>") as client:
-        ...    client.api.get("/ping")
         ...    response = client.api.get("/api/stats")
         ...    print(response.status_code)
         ...    print(response.json())
         200
-        {'AnalysedFiles': 293, 'Traffic': 266161837}
+        {'AnalysedFiles': 10, 'Traffic': 10000}
 
     These methods will return a :class:`requests.Response` object.
     """  # noqa: E501
@@ -344,16 +354,11 @@ class WebClient:
             >>> response = client.stats()
             >>> response
             InlyseResponse(
-                endpoint='/api/stats'
+                endpoint='/api/stats',
                 status=200,
-                rate_limit={
-                    'remaining': '14993',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 19, 45, 38, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={'AnalysedFiles': 201, 'Traffic': 205581688}
+                content={'AnalysedFiles': 10, 'Traffic': 10000}
             )
             >>> client.close()
 
@@ -428,20 +433,11 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> download = client.download("0ef3822b-481d-4368-88ea-6a2417bb2dac")
-            >>> download
-            InlyseResponse(
-                endpoint='/api/analysis/0ef3822b-481d-4368-88ea-6a2417bb2dac/download'
-                status=200,
-                rate_limit={
-                    'remaining': '14980',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 19, 45, 38, tzinfo=datetime.timezone.utc
-                        )
-                    },
-                content_type=('application/pdf', {}),
-                conent=b'%PDF-1.4...%%EOF'
-            )
+            >>> download = client.download("1e65cd90-3fe8-4da8-a4a5-4b63e6ed6133")
+            >>> download.content_type
+            ('application/pdf', {})
+            >>> download.content[:8]
+            b'%PDF-1.7'
             >>> client.close()
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
@@ -493,21 +489,11 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> response = client.disarm_analysis("0ef3822b-481d-4368-88ea-6a2417bb2dac")
-            >>> response
-            InlyseResponse(
-                endpoint='/api/analysis/0ef3822b-481d-4368-88ea-6a2417bb2dac/disarm',
-                status=200,
-                rate_limit={
-                    'remaining': '14999',
-                    'reset': datetime.datetime(
-                        2023, 3, 21, 19, 44, 12, tzinfo=datetime.timezone.utc
-                    )
-                },
-                content_type=('application/pdf', {}),
-                content=b'%PDF-1.7...%%EOF'
-            )
-            >>> client.close()
+            >>> response = client.disarm_analysis("8f238204-8540-4424-9872-822c46e39c05")
+            >>> response.content_type
+            ('application/pdf', {})
+            >>> response.content[:8]
+            b'%PDF-1.7'
 
         :return: Returns an :class:`inlyse.cli.InlyseResponse` object.
         :rtype: InlyseResponse
@@ -554,25 +540,18 @@ class WebClient:
 
         .. sourcecode:: pycon
 
+            >>> import os
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
             >>> with open("/tmp/javascript.pdf", "rb") as fp:
             ...     response = client.upload_file(os.path.basename(fp.name), fp.read())
             >>> response
             InlyseResponse(
-                endpoint='/api/files/'
+                endpoint='/api/files/',
                 status=200,
-                rate_limit={
-                    'remaining': '14977',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 19, 45, 38, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'id': '4e1ae479-583b-4d52-a080-88adf6502364',
-                    'EstimatedAnalysisTime': 5.83675
-                }
+                content={'id': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'EstimatedAnalysisTime': 5.83675}
             )
             >>> client.close()
 
@@ -626,19 +605,11 @@ class WebClient:
             >>> response = client.upload_url("https://arxiv.org/pdf/2004.14471.pdf")
             >>> response
             InlyseResponse(
-                endpoint='/api/files/url'
+                endpoint='/api/files/url',
                 status=200,
-                rate_limit={
-                    'remaining': '14988',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 20, 47, 35, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'id': '1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
-                    'EstimatedAnalysisTime': 5.83675
-                }
+                content={'id': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'EstimatedAnalysisTime': 5.83675}
             )
             >>> client.close()
 
@@ -694,17 +665,9 @@ class WebClient:
             InlyseResponse(
                 endpoint='/api/files/owa',
                 status=200,
-                rate_limit={
-                    'remaining': '14988',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 20, 47, 35, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'id': '1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
-                    'EstimatedAnalysisTime': 5.83675
-                }
+                content={'id': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'EstimatedAnalysisTime': 5.83675}
             )
             >>> client.close()
 
@@ -748,23 +711,15 @@ class WebClient:
 
         .. sourcecode:: pycon
 
+            >>> import os
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
             >>> with open("/tmp/javascript.pdf", "rb") as fp:
             ...     response = client.disarm_file(os.path.basename(fp.name), fp.read())
-            >>> response
-            InlyseResponse(
-                endpoint='/api/files/disarm',
-                status=200,
-                rate_limit={
-                    'remaining': '14999',
-                    'reset': datetime.datetime(
-                        2023, 3, 21, 19, 44, 12, tzinfo=datetime.timezone.utc
-                    )
-                },
-                content_type=('application/pdf', {}),
-                content=b'%PDF-1.7...%%EOF'
-            )
+            >>> response.content_type
+            ('application/pdf', {})
+            >>> response.content[:8]
+            b'%PDF-1.7'
             >>> client.close()
 
 
@@ -832,20 +787,9 @@ class WebClient:
             InlyseResponse(
                 endpoint='/api/analysis',
                 status=200,
-                rate_limit={
-                    'remaining': '14998',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                conent=[
-                    '079211f4-c401-44fc-a846-01f7ff26e47f',
-                    '177a9179-c2d2-4d4a-976f-a8e1e4f496a0',
-                    '2f02e53e-5722-4fb1-b0a2-5ae053b2f00c',
-                    ...
-                    '36adec8e-d54f-401b-bc2f-1dd22ea9b099',
-                ]
+                content=['69b61efb-f801-4fe2-860e-082a44aa73b6', '2c818f52-d198-42e2-b405-8e4affc51bfc', '5c142388-275e-4255-b6af-96a372cd09bc']
             )
             >>> client.close()
 
@@ -895,31 +839,14 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> response = client.check("1a13ba09-8487-4621-b2a3-b0ff460f7a9e")
+            >>> response = client.check("1ee54150-1df8-4a74-b8c9-cf12c0647339")
             >>> response
             InlyseResponse(
-                endpoint='/api/analysis/1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
+                endpoint='/api/analysis/1ee54150-1df8-4a74-b8c9-cf12c0647339',
                 status=200,
-                rate_limit={
-                    'remaining': '14997',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'ID': '1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
-                    'MD5': '7cdba4461284f8e5b5646ee0b502ec55',
-                    'SHA1': 'e7ccdd6706a1ec8ac8d21e5b7d152d3e60acfe7c',
-                    'SHA256': '55e2e5b4752c3c0626c70efa86041c7429a3322beed516bb35d96fa4edd9948b',
-                    'SHA512': 'f068074c5b24133fc97febf5d534961a11cecbf0f17ac46246bdc4cb45d60b84d01ff2df77860d1db69cd37d198331fd9fbc7237e49f74a55af3672e532f6d45',
-                    'Filename': '2004.14471.pdf',
-                    'Size': 1354850,
-                    'FileType': 'application/pdf',
-                    'Label': 'benign',
-                    'ScoreBenign': '0.9507668964520833',
-                    'ScoreMalicious': '0.04923310354791669'
-                }
+                content={'ID': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'MD5': 'f5d7470145ba5a8afc9b0ac502231d63', 'SHA1': '4a1634fdb9cca72ec0a7f094055e4b08a40da66c', 'SHA256': '11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2', 'SHA512': '98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e', 'Filename': 'dairycow_vacalechera.pdf', 'Size': 3042676, 'FileType': 'application/pdf', 'Label': 'benign', 'ScoreBenign': '0.9225084524559095', 'ScoreMalicious': '0.07749154754409047'}
             )
             >>> client.close()
 
@@ -953,31 +880,14 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> response = client.get_analysis("1a13ba09-8487-4621-b2a3-b0ff460f7a9e", 5.83675, 2)
+            >>> response = client.get_analysis("1ee54150-1df8-4a74-b8c9-cf12c0647339", 5.83675, 2)
             >>> response
             InlyseResponse(
-                endpoint='/api/analysis/1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
+                endpoint='/api/analysis/1ee54150-1df8-4a74-b8c9-cf12c0647339',
                 status=200,
-                rate_limit={
-                    'remaining': '14995',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'ID': '1a13ba09-8487-4621-b2a3-b0ff460f7a9e',
-                    'MD5': '7cdba4461284f8e5b5646ee0b502ec55',
-                    'SHA1': 'e7ccdd6706a1ec8ac8d21e5b7d152d3e60acfe7c',
-                    'SHA256': '55e2e5b4752c3c0626c70efa86041c7429a3322beed516bb35d96fa4edd9948b',
-                    'SHA512': 'f068074c5b24133fc97febf5d534961a11cecbf0f17ac46246bdc4cb45d60b84d01ff2df77860d1db69cd37d198331fd9fbc7237e49f74a55af3672e532f6d45',
-                    'Filename': '2004.14471.pdf',
-                    'Size': 1354850,
-                    'FileType': 'application/pdf',
-                    'Label': 'benign',
-                    'ScoreBenign': '0.9507668964520833',
-                    'ScoreMalicious': '0.04923310354791669'
-                }
+                content={'ID': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'MD5': 'f5d7470145ba5a8afc9b0ac502231d63', 'SHA1': '4a1634fdb9cca72ec0a7f094055e4b08a40da66c', 'SHA256': '11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2', 'SHA512': '98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e', 'Filename': 'dairycow_vacalechera.pdf', 'Size': 3042676, 'FileType': 'application/pdf', 'Label': 'benign', 'ScoreBenign': '0.9225084524559095', 'ScoreMalicious': '0.07749154754409047'}
             )
             >>> client.close()
 
@@ -1040,35 +950,18 @@ class WebClient:
 
         .. sourcecode:: pycon
 
+            >>> import os
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> with open("/tmp/javascript.pdf", "rb") as fp:
+            >>> with open("/tmp/dairycow_vacalechera.pdf", "rb") as fp:
             ...     response = client.scan_file(os.path.basename(fp.name), fp.read())
             >>> response
             InlyseResponse(
-                endpoint='/api/analysis/8f238204-8540-4424-9872-822c46e39c05',
+                endpoint='/api/analysis/1ee54150-1df8-4a74-b8c9-cf12c0647339',
                 status=200,
-                rate_limit={
-                    'remaining': '14992',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'ID': '8f238204-8540-4424-9872-822c46e39c05',
-                    'MD5': '55b47515feeeb8dae78763d662923787',
-                    'SHA1': '5af3f43e3169e1e678e06b6372a60d9df22dc6d0',
-                    'SHA256': '1fede472c1e339272f2ea27496ea059e86d6594b1ae93cbb6a486eeb118527e1',
-                    'SHA512': 'a2fff650ba010c56b51ff4e9f3ee77292651428ad41d467f8c471b4c9091060a3dc64acea22ee875ec6f14abd3e018f944a92e87f4567b71fae05b2d80566880',
-                    'Filename': 'javascript.pdf',
-                    'Size': 990,
-                    'FileType': 'application/pdf',
-                    'Label': 'malicious',
-                    'ScoreBenign': '0.0008773440468863303',
-                    'ScoreMalicious': '0.9991226559531137',
-                    'Action': 'DELETE;DISARM'
-                }
+                content={'ID': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'MD5': 'f5d7470145ba5a8afc9b0ac502231d63', 'SHA1': '4a1634fdb9cca72ec0a7f094055e4b08a40da66c', 'SHA256': '11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2', 'SHA512': '98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e', 'Filename': 'dairycow_vacalechera.pdf', 'Size': 3042676, 'FileType': 'application/pdf', 'Label': 'benign', 'ScoreBenign': '0.9225084524559095', 'ScoreMalicious': '0.07749154754409047'}
             )
             >>> client.close()
 
@@ -1097,31 +990,14 @@ class WebClient:
 
             >>> from inlyse import WebClient
             >>> client = WebClient("<your license key>")
-            >>> response = client.scan_url("https://arxiv.org/pdf/2004.14471.pdf")
+            >>> response = client.scan_url("https://vaca.foo/dairycow_vacalechera.pdf")
             >>> response
             InlyseResponse(
-                endpoint='/api/analysis/98e56af3-0f17-470b-bfcb-5ef7d4c83e07',
+                endpoint='/api/analysis/1ee54150-1df8-4a74-b8c9-cf12c0647339',
                 status=200,
-                rate_limit={
-                    'remaining': '14988',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'ID': '98e56af3-0f17-470b-bfcb-5ef7d4c83e07',
-                    'MD5': '7cdba4461284f8e5b5646ee0b502ec55',
-                    'SHA1': 'e7ccdd6706a1ec8ac8d21e5b7d152d3e60acfe7c',
-                    'SHA256': '55e2e5b4752c3c0626c70efa86041c7429a3322beed516bb35d96fa4edd9948b',
-                    'SHA512': 'f068074c5b24133fc97febf5d534961a11cecbf0f17ac46246bdc4cb45d60b84d01ff2df77860d1db69cd37d198331fd9fbc7237e49f74a55af3672e532f6d45',
-                    'Filename': '2004.14471.pdf',
-                    'Size': 1354850,
-                    'FileType': 'application/pdf',
-                    'Label': 'benign',
-                    'ScoreBenign': '0.9507668964520833',
-                    'ScoreMalicious': '0.04923310354791669'
-                }
+                content={'ID': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'MD5': 'f5d7470145ba5a8afc9b0ac502231d63', 'SHA1': '4a1634fdb9cca72ec0a7f094055e4b08a40da66c', 'SHA256': '11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2', 'SHA512': '98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e', 'Filename': 'dairycow_vacalechera.pdf', 'Size': 3042676, 'FileType': 'application/pdf', 'Label': 'benign', 'ScoreBenign': '0.9225084524559095', 'ScoreMalicious': '0.07749154754409047'}
             )
             >>> client.close()
 
@@ -1156,28 +1032,11 @@ class WebClient:
             ... )
             >>> response
             InlyseResponse(
-                endpoint='/api/analysis/98e56af3-0f17-470b-bfcb-5ef7d4c83e07',
+                endpoint='/api/analysis/1ee54150-1df8-4a74-b8c9-cf12c0647339',
                 status=200,
-                rate_limit={
-                    'remaining': '14988',
-                    'reset': datetime.datetime(
-                        2023, 3, 20, 22, 16, 47, tzinfo=datetime.timezone.utc
-                    )
-                },
+                rate_limit={'limit': 100, 'remaining': 99, 'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)},
                 content_type=('application/json', {'charset': 'UTF-8'}),
-                content={
-                    'ID': '98e56af3-0f17-470b-bfcb-5ef7d4c83e07',
-                    'MD5': '7cdba4461284f8e5b5646ee0b502ec55',
-                    'SHA1': 'e7ccdd6706a1ec8ac8d21e5b7d152d3e60acfe7c',
-                    'SHA256': '55e2e5b4752c3c0626c70efa86041c7429a3322beed516bb35d96fa4edd9948b',
-                    'SHA512': 'f068074c5b24133fc97febf5d534961a11cecbf0f17ac46246bdc4cb45d60b84d01ff2df77860d1db69cd37d198331fd9fbc7237e49f74a55af3672e532f6d45',
-                    'Filename': '2004.14471.pdf',
-                    'Size': 1354850,
-                    'FileType': 'application/pdf',
-                    'Label': 'benign',
-                    'ScoreBenign': '0.9507668964520833',
-                    'ScoreMalicious': '0.04923310354791669'
-                }
+                content={'ID': '1ee54150-1df8-4a74-b8c9-cf12c0647339', 'MD5': 'f5d7470145ba5a8afc9b0ac502231d63', 'SHA1': '4a1634fdb9cca72ec0a7f094055e4b08a40da66c', 'SHA256': '11772fdbe266d8214875095b6dc8102838a0fe3d7f25bc75c88a7f6fb6c98af2', 'SHA512': '98b0dbf4f999f1efc1f5d28dbd5edbbb5d49903ddae230e6848fdf90b18332cc90244b290b35fb0d61ca576e180fa3978a5e7491b0b0b7505eb9b87a61b9064e', 'Filename': 'dairycow_vacalechera.pdf', 'Size': 3042676, 'FileType': 'application/pdf', 'Label': 'benign', 'ScoreBenign': '0.9225084524559095', 'ScoreMalicious': '0.07749154754409047'}
             )
             >>> client.close()
 

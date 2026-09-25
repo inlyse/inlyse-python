@@ -42,14 +42,16 @@ Every endpoint method of the :class:`inlyse.cli.WebClient` returns an object of 
 
     .. sourcecode:: pycon
 
-        >>> response.rate_limit
-        {
-            'limit': '15000',
-            'remaining': '14999',
-            'reset': datetime.datetime(
-                2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc
-            )
-        }
+        >>> import os
+        >>> from pprint import pprint as pp
+        >>> from inlyse import WebClient
+        >>> client = WebClient("<your license key>")
+        >>> with open("/tmp/javascript.pdf", "rb") as fp:
+        ...     response = client.upload_file(os.path.basename(fp.name), fp.read())
+        >>> pp(response.rate_limit)
+        {'limit': 100,
+         'remaining': 99,
+         'reset': datetime.datetime(2023, 3, 28, 18, 57, 15, tzinfo=datetime.timezone.utc)}
 
 Maximal Upload File Size
 ------------------------
@@ -89,12 +91,13 @@ The following example shows how to upload a local file:
 
 .. sourcecode:: pycon
 
+    >>> import os
     >>> from inlyse import WebClient
-    >>> client = WebClient(<your license key>)
+    >>> client = WebClient("<your license key>")
     >>> with open("/tmp/javascript.pdf", "rb") as fp:
     ...     response = client.upload_file(os.path.basename(fp.name), fp.read())
     >>> response.content["id"]
-    '8f238204-8540-4424-9872-822c46e39c05'
+    '1ee54150-1df8-4a74-b8c9-cf12c0647339'
 
 The response of the upload request includes an UUID which uniquely identifies the
 analysis and an estimated time for the analysis. In a second step it's necessary
@@ -106,8 +109,9 @@ The following example show how to get the result of the previous uploaded file:
 
 .. sourcecode:: pycon
 
+    >>> import os
     >>> from inlyse import WebClient
-    >>> client = WebClient(<your license key>)
+    >>> client = WebClient("<your license key>")
     >>> response = client.check("8f238204-8540-4424-9872-822c46e39c05")
 
 The result includes the probability of the maliciousness of the document and
@@ -148,8 +152,9 @@ The following example shows how you disarm a local file:
 
 .. sourcecode:: pycon
 
+    >>> import os
     >>> from inlyse import WebClient
-    >>> client = WebClient(<your license key>)
+    >>> client = WebClient("<your license key>")
     >>> with open("/tmp/javascript.pdf", "rb") as fp:
     ...     response = client.disarm_file(os.path.basename(fp.name), fp.read())
 
