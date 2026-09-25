@@ -13,7 +13,7 @@ TEST_TOKEN = "test"
 TEST_URL = "http://inlyse.test"
 DOCTEST_FILES = [
     Path("/tmp/dairycow_vacalechera.pdf"),
-    Path("/tmp/javascript.pdf.pdf"),
+    Path("/tmp/javascript.pdf"),
 ]
 
 
