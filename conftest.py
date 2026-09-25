@@ -118,6 +118,8 @@ def add_doctest_fixtures(
         request.addfinalizer(_teardown)
 
         for path in DOCTEST_FILES:
+            if not path.parent.exists():
+                path.parent.mkdir(parents=True)
             path.open("xb").close()
             request.addfinalizer(path.unlink)
 
