@@ -1,10 +1,15 @@
 """Module for all exceptions"""
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any
+
 
 class InlyseApiError(Exception):
     """The INLYSE API returned an error"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.response = kwargs.pop("response", None)
 
 

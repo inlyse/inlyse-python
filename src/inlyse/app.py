@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import json
 import os
 import pathlib
@@ -9,6 +11,13 @@ from functools import partial
 from logging import DEBUG, INFO, WARNING
 from multiprocessing import freeze_support
 from multiprocessing.pool import ThreadPool as Pool
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    import uuid
+    from typing import Any
+    from .cli import InlyseResponse
+    from .cli import WebClient
 
 import click
 import requests
@@ -28,34 +37,36 @@ LOGLEVELS = {
 @dataclass
 class ScanFailure:
     asset: str
-    error: str
+    error: Exception
 
 
 @dataclass
 class ScanSuccess:
     asset: str
-    response: inlyse.cli.InlyseResponse
+    response: InlyseResponse
 
 
-def _scan_file(client, filename):
+def _scan_file(client: WebClient, filename: str) -> InlyseResponse:
     with open(filename, "rb") as fb:
         return client.scan_file(fb.name, fb.read())
 
 
-def _disarm_file(client, filename):
+def _disarm_file(client: WebClient, filename: str) -> InlyseResponse:
     with open(filename, "rb") as fb:
         return client.disarm(fb.name, fb.read())
 
 
-def _scan_url(client, url):
+def _scan_url(client: WebClient, url: str) -> InlyseResponse:
     return client.scan_url(url)
 
 
-def _get_analyses(client, analysis_id):
+def _get_analyses(client: WebClient, analysis_id: str) -> InlyseResponse:
     return client.get_analysis(analysis_id)
 
 
-def _api_wrapper(asset, method, client):
+def _api_wrapper(
+    asset: str, method: str, client: WebClient
+) -> ScanSuccess | ScanFailure:
     mapper = {
         "scan_file": _scan_file,
         "scan_url": _scan_url,
@@ -68,9 +79,21 @@ def _api_wrapper(asset, method, client):
         return ScanFailure(str(asset), error)
 
 
+class ScanResult(TypedDict):
+    success: dict[str, Any]
+    failures: dict[str, str]
+
+
 def _scan(
-    method, assets, asset_unit, url, license_key, threads, timeout, remaining
-):
+    method: str,
+    assets: str | tuple[str, ...] | tuple[uuid.UUID, ...],
+    asset_unit,
+    url: str,
+    license_key: str,
+    threads: int,
+    timeout: float,
+    remaining: int,
+) -> ScanResult:
     if remaining < len(assets) * 4:
         click.confirm(
             (
@@ -81,7 +104,7 @@ def _scan(
             abort=True,
             err=True,
         )
-    scans = {
+    scans: ScanResult = {
         "success": {},
         "failures": {},
     }
@@ -100,13 +123,12 @@ def _scan(
                 desc=desc,
                 unit=asset_unit,
             ):
-                if type(result).__name__ == "ScanSuccess":
+                if isinstance(result, ScanSuccess):
                     scans["success"][result.asset] = result.response.content
                 else:
                     scans["failures"][result.asset] = str(result.error)
-    if method == "disarm_file":
-        return scans
     click.echo(json.dumps(scans))
+    return scans
 
 
 _disarm = _scan
@@ -146,7 +168,14 @@ _disarm = _scan
 )
 @click.option("-v", "--verbose", count=True, default=0)
 @click.pass_context
-def main(ctx, license_key, url, threads, timeout, verbose):
+def main(
+    ctx: click.Context,
+    license_key: str,
+    url: str,
+    threads: int,
+    timeout: float,
+    verbose: int,
+) -> None:
     ctx.ensure_object(dict)
     ctx.obj["LOGLEVEL"] = LOGLEVELS.get(min(len(LOGLEVELS) - 1, verbose))
     ctx.obj["LICENSE_KEY"] = license_key
@@ -173,19 +202,25 @@ def main(ctx, license_key, url, threads, timeout, verbose):
                     err=True,
                 )
                 sys.exit(1)
-            if response.status == 429 or response.rate_limit["remaining"] == 0:
-                logger.debug(response)
-                continue_in = response.rate_limit["reset"] - datetime.now(
-                    timezone.utc
-                )
-                continue_in = divmod(continue_in.total_seconds(), 60)[0]
-                click.echo(
-                    "Rate-Limit Exceeded: Please try again in"
-                    + f" {continue_in} minutes.",
-                    err=True,
-                )
-                sys.exit(1)
-            ctx.obj["REMAINING"] = response.rate_limit["remaining"]
+            if response.rate_limit is not None:
+                if (
+                    response.status == 429
+                    or response.rate_limit["remaining"] == 0
+                ):
+                    logger.debug(response)
+                    continue_in = response.rate_limit["reset"] - datetime.now(
+                        timezone.utc
+                    )
+                    continue_in_minutes = divmod(
+                        continue_in.total_seconds(), 60
+                    )[0]
+                    click.echo(
+                        "Rate-Limit Exceeded: Please try again in"
+                        + f" {continue_in_minutes} minutes.",
+                        err=True,
+                    )
+                    sys.exit(1)
+                ctx.obj["REMAINING"] = response.rate_limit["remaining"]
         except requests.exceptions.ReadTimeout as error:
             logger.debug(error)
             click.echo("Timeout: The API request timed out", err=True)
@@ -207,7 +242,7 @@ def main(ctx, license_key, url, threads, timeout, verbose):
 
 @main.group()
 @click.pass_context
-def scan(ctx):
+def scan(ctx: click.Context) -> None:
     """Scan files or URLs"""
     pass
 
@@ -215,7 +250,7 @@ def scan(ctx):
 @scan.command(name="file")
 @click.pass_context
 @click.argument("filenames", nargs=-1, type=click.Path(exists=True))
-def scan_file(ctx, filenames):
+def scan_file(ctx: click.Context, filenames: tuple[str, ...]) -> None:
     """Scan files"""
     _scan(
         "scan_file",
@@ -232,7 +267,7 @@ def scan_file(ctx, filenames):
 @scan.command(name="url")
 @click.pass_context
 @click.argument("urls", nargs=-1, type=PUBLIC_URL)
-def scan_url(ctx, urls):
+def scan_url(ctx: click.Context, urls: tuple[str, ...]) -> None:
     """Scan URLs"""
     _scan(
         "scan_url",
@@ -257,9 +292,14 @@ def scan_url(ctx, urls):
     help="The output folder for the disarmed documents.",
 )
 @click.argument("filenames", nargs=-1, type=click.Path(exists=True))
-def disarm(ctx, output_folder, filenames):
+def disarm(
+    ctx: click.Context, output_folder: str, filenames: tuple[str, ...]
+) -> None:
     """Disarm files"""
-    output = {}
+    output: ScanResult = {
+        "success": {},
+        "failures": {},
+    }
     disarmed_files = _disarm(
         "disarm_file",
         filenames,
@@ -270,19 +310,19 @@ def disarm(ctx, output_folder, filenames):
         ctx.obj["TIMEOUT"],
         ctx.obj["REMAINING"],
     )
-    for status, results in disarmed_files.items():
-        output[status] = {}
-        for asset, result in results.items():
-            if status == "success":
-                disarmed_file = os.path.join(
-                    output_folder,
-                    f"{pathlib.Path(asset).stem}.disarmed.pdf",
-                )
-                with open(disarmed_file, "wb") as fb:
-                    fb.write(result)
-                output[status][asset] = {"dst": disarmed_file}
-            else:
-                output[status][asset] = result
+    for asset, result in disarmed_files["success"].items():
+        disarmed_file = os.path.join(
+            output_folder,
+            f"{pathlib.Path(asset).stem}.disarmed.pdf",
+        )
+        with open(disarmed_file, "wb") as fb:
+            fb.write(result)
+        output["success"][asset] = {"dst": disarmed_file}
+    for (
+        asset,
+        result,
+    ) in disarmed_files["failures"].items():
+        output["failures"][asset] = result
     click.echo(json.dumps(output))
 
 
@@ -299,7 +339,7 @@ def disarm(ctx, output_folder, filenames):
     ),
     help="Filter for the list of analyses.",
 )
-def list_analyses(ctx, analyses_filter):
+def list_analyses(ctx: click.Context, analyses_filter: str) -> None:
     """List all analyses"""
     with inlyse.WebClient(
         ctx.obj["LICENSE_KEY"], ctx.obj["URL"], ctx.obj["TIMEOUT"]
@@ -314,7 +354,7 @@ def list_analyses(ctx, analyses_filter):
 
 @main.command()
 @click.pass_context
-def stats(ctx):
+def stats(ctx: click.Context) -> None:
     """Get some stats"""
     with inlyse.WebClient(
         ctx.obj["LICENSE_KEY"], ctx.obj["URL"], ctx.obj["TIMEOUT"]
@@ -330,7 +370,7 @@ def stats(ctx):
 @main.command()
 @click.pass_context
 @click.argument("analysis_ids", nargs=-1, type=click.UUID)
-def get(ctx, analysis_ids):
+def get(ctx: click.Context, analysis_ids: tuple[uuid.UUID, ...]) -> None:
     """Get the analyses result(s)"""
     _scan(
         "get_analyses",

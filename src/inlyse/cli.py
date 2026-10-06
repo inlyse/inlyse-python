@@ -1,5 +1,7 @@
 """The module bundles all available clients for the INLYSE API."""
 
+from __future__ import annotations
+
 # Standard Library
 import functools
 import logging
@@ -7,7 +9,12 @@ import random
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Union
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from typing import Any, Callable, Self, Union
+
+    from requests.models import PreparedRequest, Response
 
 # Third Party Libraries
 from requests.adapters import HTTPAdapter, Retry
@@ -25,16 +32,24 @@ logger = logging.getLogger(__name__)  # Init logger
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.timeout = kwargs.get("timeout", 5)
         del kwargs["timeout"]
         super().__init__(*args, **kwargs)
 
-    def send(self, request, **kwargs):
+    def send(
+        self, request: PreparedRequest, *args: Any, **kwargs: Any
+    ) -> Response:
         timeout = kwargs.get("timeout")
         if timeout is None:
             kwargs["timeout"] = self.timeout
         return super().send(request, **kwargs)
+
+
+class RateLimit(TypedDict):
+    limit: int
+    remaining: int
+    reset: datetime
 
 
 @dataclass
@@ -57,7 +72,7 @@ class InlyseResponse:
 
     endpoint: str
     status: int
-    rate_limit: Union[None, dict]
+    rate_limit: RateLimit | None
     content_type: tuple
     content: Any
 
@@ -91,16 +106,20 @@ def get_reset_time(reset: str) -> datetime:
         raise ValueError(f"Invalid date format: {reset}") from err
 
 
-def endpoint(path=None):
-    def endpoint_decorator(func):
+def endpoint(
+    path: str | None = None,
+) -> Callable[[Callable[..., Any]], Callable[..., InlyseResponse]]:
+    def endpoint_decorator(
+        func: Callable[..., Any],
+    ) -> Callable[..., InlyseResponse]:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> InlyseResponse:
             if path:
                 kwargs["path"] = path
             response = func(*args, **kwargs)
             quota = None
             if "x-ratelimit-remaining" in response.headers:
-                quota = {
+                rate_limit: RateLimit = {
                     "limit": int(response.headers["x-ratelimit-limit"]),
                     "remaining": int(
                         response.headers["x-ratelimit-remaining"]
@@ -109,6 +128,7 @@ def endpoint(path=None):
                         response.headers["x-ratelimit-reset"]
                     ),
                 }
+                quota = rate_limit
             content_type = _parse_content_type_header(
                 response.headers["content-type"]
             )
@@ -179,10 +199,10 @@ class WebClient:
         self._api: Union[None, sessions.BaseUrlSession] = None
         self.api: sessions.BaseUrlSession
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, type, value, traceback) -> None:
         self.close()
 
     @property
@@ -728,7 +748,7 @@ class WebClient:
         """  # noqa: E501
         return self.api.post(path, files={"file": (filename, content)})
 
-    def disarm(self, filename: str, content: bytes):
+    def disarm(self, filename: str, content: bytes) -> InlyseResponse:
         response = self.disarm_file(filename, content)
         if response.status == 200:
             return response
@@ -912,7 +932,9 @@ class WebClient:
             + "or the estimated waiting time."
         )
 
-    def _upload(self, upload_type, max_retries, **kwargs):
+    def _upload(
+        self, upload_type: str, max_retries: int, **kwargs: Any
+    ) -> InlyseResponse:
         """An upload wrapper method"""
         upload_methods = {
             "file": self.upload_file,
