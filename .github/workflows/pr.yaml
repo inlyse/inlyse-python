@@ -63,6 +63,9 @@ jobs:
       group: ci-tests-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.ref }}
       cancel-in-progress: true
 
+    env:
+      POETRY_REQUESTS_TIMEOUT: "120"
+
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
