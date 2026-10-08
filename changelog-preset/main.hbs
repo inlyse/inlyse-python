@@ -1,0 +1,24 @@
+{{> header}}
+
+{{#each commitGroups}}
+
+{{#if title}}
+### {{title}}
+
+{{/if}}
+{{#each commits}}
+{{> commit root=@root}}
+{{/each}}
+{{#if dependencyUpdates.length}}
+{{#if commits.length}}
+
+{{/if}}
+#### Dependency Updates
+
+{{#each dependencyUpdates}}
+* bump {{name}} from {{from}} to {{to}}
+{{/each}}
+{{/if}}
+
+{{/each}}
+{{> footer}}
