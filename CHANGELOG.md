@@ -1,6 +1,13 @@
 Release Notes
 -------------
 
+## [1.1.2](https://github.com/inlyse/inlyse-python/compare/1.1.1...1.1.2) (2026-10-21)
+
+
+### Bug Fixes
+
+* **deps:** bump certifi from 2025.4.26 to 2026.10.19 ([#224](https://github.com/inlyse/inlyse-python/issues/224)) ([77cf87f](https://github.com/inlyse/inlyse-python/commit/77cf87f8e230d291067621aa1462cc50298afde3))
+
 ## [1.1.1](https://github.com/inlyse/inlyse-python/compare/1.1.0...1.1.1) (2026-10-07)
 
 
