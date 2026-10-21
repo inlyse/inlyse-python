@@ -66,13 +66,17 @@
         ]
       }
     ],
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "config": "./changelog-preset/index.mjs"
+      }
+    ],
     [
       "@semantic-release/changelog",
       {
         "changelogTitle": "Release Notes\n-------------",
-        "changelogFile": "CHANGELOG.md",
-        "config": "./changelog-preset/index.mjs"
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     [
