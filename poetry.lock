@@ -596,14 +596,14 @@ files = [
 
 [[package]]
 name = "domdf-python-tools"
-version = "3.10.0"
+version = "3.11.0"
 description = "Helpful functions for Python 🐍 🛠️"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 groups = ["docs"]
 files = [
-    {file = "domdf_python_tools-3.10.0-py3-none-any.whl", hash = "sha256:5e71c1be71bbcc1f881d690c8984b60e64298ec256903b3147f068bc33090c36"},
-    {file = "domdf_python_tools-3.10.0.tar.gz", hash = "sha256:2ae308d2f4f1e9145f5f4ba57f840fbfd1c2983ee26e4824347789649d3ae298"},
+    {file = "domdf_python_tools-3.11.0-py3-none-any.whl", hash = "sha256:561ac19b452cdfee01121f50117a338d03c51b36084d2f9617651113eec6aac8"},
+    {file = "domdf_python_tools-3.11.0.tar.gz", hash = "sha256:518ac47b27a799a72b01377f21588e41550a59918c25a74fb55fc7d15fbb2434"},
 ]
 
 [package.dependencies]
@@ -2510,4 +2510,4 @@ docs = []
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "26146ff4562a6bfeb446a39164f9beb6b269498dbf95ac950daea3480ee7c359"
+content-hash = "7564387fb72e9a8907fc457cd6c6ccd828cbb5e63d44f96249f819e5d6eef1ac"
