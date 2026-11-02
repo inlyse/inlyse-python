@@ -69,7 +69,7 @@
     [
       "@semantic-release/release-notes-generator",
       {
-        "config": "./changelog-preset/index.mjs"
+        "config": "inlyse-changelog-preset"
       }
     ],
     [

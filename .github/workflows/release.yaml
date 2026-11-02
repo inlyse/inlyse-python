@@ -21,6 +21,7 @@ env:
 	-p @semantic-release/github
 	-p @semantic-release/git
 	-p @google/semantic-release-replace-plugin
+    -p ./changelog-preset
 	semantic-release'
 
 jobs:
