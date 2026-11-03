@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  semantic_release: 'npx --yes
+  semantic_release: 'npx --yes --install-links
 	-p semantic-release
 	-p @semantic-release/commit-analyzer
 	-p @semantic-release/release-notes-generator
