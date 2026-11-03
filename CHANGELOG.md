@@ -1,6 +1,17 @@
 Release Notes
 -------------
 
+## [1.1.3](https://github.com/inlyse/inlyse-python/compare/1.1.2...1.1.3) (2026-11-03)
+
+
+### Bug Fixes
+
+* **deps:** updating dependencies ([#231](https://github.com/inlyse/inlyse-python/issues/231)) ([948dadf](https://github.com/inlyse/inlyse-python/commit/948dadf233449f06fcbadcd2c352ef544ff92253))
+
+#### Dependency Updates
+
+* bump actions/setup-python from 7.0.0 to 7.1.0
+
 ## [1.1.2](https://github.com/inlyse/inlyse-python/compare/1.1.1...1.1.2) (2026-10-21)
 
 
