@@ -28,6 +28,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
@@ -99,7 +100,7 @@ formats = "bztar"
 
 [tool.black]
 line-length = 79
-target-version = ["py313"]
+target-version = ["py315"]
 force-exclude = """
 (
   /(
@@ -133,7 +134,7 @@ exclude = [
     "venv",
 ]
 line-length = 79
-target-version = "py313"
+target-version = "py315"
 
 [tool.ruff.lint]
 select = ["E", "F"]
