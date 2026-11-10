@@ -83,7 +83,7 @@ domdf-python-tools = "^3.11.0"
 
 [tool.poetry.group.typing.dependencies]
 types-requests = "^2.33.0.20261006"
-types-tqdm = "^4.70.0.20260906"
+types-tqdm = "^4.70.0.20261106"
 
 [tool.poetry.extras]
 docs = ["Sphinx", "sphinx-rtd-theme", "sphinxcontrib-napoleon"]
