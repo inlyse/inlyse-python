@@ -59,7 +59,7 @@ isort = "^9.0.2"
 mypy = "^2.4.0"
 ruff = "^0.17.6"
 packaging = "^26.3"
-pyyaml = { version = "!=6.0.0,!=5.4.0,!=5.4.1" }
+pyyaml = { version = "!=5.4.0,!=5.4.1,!=6.0.0" }
 
 [tool.poetry.group.test.dependencies]
 pytest = "^9.1.1"
